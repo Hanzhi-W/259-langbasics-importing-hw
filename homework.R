@@ -18,7 +18,7 @@
 # Load the readr package
 
 # ANSWER
-
+library(readr)
 
 ### QUESTION 2 ----- 
 
@@ -42,10 +42,11 @@
 
 # A list of column names are provided to use:
 
+
 col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 
 # ANSWER
-
+ds1 <- read_tsv("data_A/6191_1.txt", skip = 7, col_names = col_names)
 
 
 ### QUESTION 3 ----- 
@@ -55,7 +56,9 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # Then write the new data to a CSV file in the "data_cleaned" folder
 
 # ANSWER
-
+ds1$trial_num_new <- ds1$trial_num + 100
+write_csv(ds1, file = "data_cleaned/6191_1.csv")
+  
 
 ### QUESTION 4 ----- 
 
@@ -63,14 +66,14 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # Store it to a variable
 
 # ANSWER
-
+full_file_names <- list.files("data_A", full.names = TRUE)
 
 ### QUESTION 5 ----- 
 
 # Read all of the files in data_A into a single tibble called ds
 
 # ANSWER
-
+ds <- read_tsv(full_file_names, skip = 7, col_names = col_names)
 
 ### QUESTION 6 -----
 
@@ -83,7 +86,10 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # (It should work now, but you'll see a warning because of the erroneous data point)
 
 # ANSWER
+# ds$trial_num_new <- ds$trial_num + 100
 
+ds <- read_tsv(full_file_names, skip = 7, col_names = col_names, col_types = "iccl")
+ds$trial_num_new <- ds$trial_num + 100
 
 ### QUESTION 7 -----
 
@@ -93,7 +99,8 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # Re-import the data so that filename becomes a column
 
 # ANSWER
-
+View(ds)
+ds <- read_tsv(full_file_names, skip = 7, col_names = col_names, col_types = "iccl", id = "file")
 
 ### QUESTION 8 -----
 
@@ -102,4 +109,12 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # There are two sheets of data -- import each one into a new tibble
 
 # ANSWER
+library (readxl)
 
+dataB_path <- "data_B/participant_info.xlsx"
+
+sheet_names <- excel_sheets(dataB_path)
+
+col_names_testdate <- c("participant","test date")
+ds_par <- read_xlsx(dataB_path, sheet = sheet_names[1])
+ds_testdate <- read_xlsx(dataB_path, sheet = sheet_names[2],col_names = col_names_testdate)
